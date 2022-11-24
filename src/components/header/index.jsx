@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import './index.less'
-import  logn from './images/logo.png'
+import  logo from './images/logo.png'
 export default class MyHeader extends Component {
     render() {
         return (
             <div className="MyHeader">
                 <div className="MyHeader-top">
                     <span>欢迎，admin</span>
-                    <a href="">退出</a>
+                    <a href="/">退出</a>
                     </div>
                 <div className="MyHeader-bottom">
                     <div className="MyHeader-bottom-left">
@@ -15,7 +15,7 @@ export default class MyHeader extends Component {
                     </div>
                     <div className="MyHeader-bottom-right">
                         <span>时间 </span>
-                        <img src={logn} alt="weather"/>
+                        <img src={logo} alt="weather"/>
                         <span>天气情况 </span>
                     </div>
                 </div>

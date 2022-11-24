@@ -5,6 +5,7 @@ import store from 'store'
 
 const USER_KEY = 'user_key';
 export default {
+
     /**
 
      *
@@ -33,15 +34,15 @@ export default {
      * 使用store库
      */
     saveUser(user){
-        store.set('USER_KEY',user)
+        store.set(USER_KEY,user)
     },
 
     getUser(){
-       return  store.get('USER_KEY')
+       return  store.get(USER_KEY)
     },
 
     removeUser(){
-        store.remove('USER_KEY')
+        store.remove(USER_KEY)
     }
 
 
