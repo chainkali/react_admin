@@ -1,0 +1,51 @@
+.MyHeader{
+  //color: rgba(79, 215, 75, 0.89);
+  color: #282c34;
+  height: 80px;
+  //border: 1px solid #248ed0;
+
+  .MyHeader-top{
+    text-align: right;
+    height: 40px;
+    line-height: 40px;
+    text-align: right;
+    border-bottom: 1px solid chartreuse;
+    padding-right: 30px;
+    span{
+      margin-right: 20px;
+    }
+  }
+  .MyHeader-bottom{
+    background-color: rgba(203, 213, 217, 0.21);
+    height: 40px;
+    display: flex;//水平排开
+    align-items: center;//内容垂直居中
+    .MyHeader-bottom-left{
+      position: relative;//开启定位
+      text-align: center;//内容位置
+      font-size: 25px;
+      width: 25%;
+      &::after{
+        content: '';
+        position: absolute;
+        right: 50%;
+        transform: translateX(50%);
+        top: 80%;
+        border-top: 20px solid rgba(203, 213, 217, 0.21);
+        border-right: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-left: 20px solid transparent;
+      }
+
+    }
+    .MyHeader-bottom-right{
+      text-align: right;
+      width: 75%;
+      padding-right: 30px;
+    img{
+      margin: 0 15px;
+      height: 25px;
+    }
+    }
+  }
+}
