@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
-
+import './home.less'
+import Pie from "../charts/pie";
 class Home extends Component {
     render() {
         return (
-            <div>
-                Home
+            <div className="home">
+                <Pie/>
+
             </div>
         );
     }

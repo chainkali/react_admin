@@ -5,23 +5,25 @@ import {Layout} from "antd";
 import LeftNav from "../../components/left_nav";
 import MyHeader from "../../components/header";
 import './admin.less'
-import Role from "../role/role";
+import Manage from "../manage/Manage";
 import User from "../user/user";
 import Bar from "../charts/bar";
 import Pie from "../charts/pie";
 import Home from "../home/home";
-import Person from "../person/person";
 import Goods from "../goods/goods";
-import Category from "../category/category";
-import Product from "../product/product";
+// import Category from "../category/category";
+// import Product from "../product/product";
 import Lines from "../charts/lines";
+import Narecord from "../narecord/narecord";
+import NaLocation from "../naLocation/naLocation";
+import Person from "../person/person";
 const { Header, Footer, Sider, Content } = Layout;
 
 export default class Admin extends Component {
     render() {
         const user = memoryUtils.user
         //如果当前内存没有user==>未登录
-        if(!user||!user._id){
+        if(!user||!user.id){
             //重定向
             return <Redirect to='/login'/>
         }
@@ -38,15 +40,17 @@ export default class Admin extends Component {
                         <Content className="admin-layout-Content">
                             <Switch>
                                 <Route path='/home' component={Home}/>
-                                <Route path='/category' component={Category}/>
-                                <Route path='/product' component={Product}/>
-                                <Route path='/role' component={Role}/>
+                                {/*<Route path='/category' component={Category}/>*/}
+                                {/*<Route path='/product' component={Product}/>*/}
+                                <Route path='/manage' component={Manage}/>
                                 <Route path='/user' component={User}/>
-                                <Route path='/person' component={Person}/>
+                                <Route path='/narecord' component={Narecord}/>
+                                <Route path='/naLocation' component={NaLocation}/>
                                 <Route path='/goods' component={Goods}/>
-                                <Route path='/charts/bar' component={Bar}/>
-                                <Route path='/charts/line' component={Lines}/>
-                                <Route path='/charts/pie' component={Pie}/>
+                                <Route path='/person' component={Person}/>
+                                {/*<Route path='/charts/bar' component={Bar}/>*/}
+                                {/*<Route path='/charts/line' component={Lines}/>*/}
+                                {/*<Route path='/charts/pie' component={Pie}/>*/}
                                 <Redirect to="/home"/>
                             </Switch>
                         </Content>

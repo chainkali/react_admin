@@ -9,7 +9,7 @@ export default function ajax(url,data={},type='GET'){
             promise = axios.get(url,{
                 params: data
             })
-        }else {
+        }else{
             promise = axios.post(url,data)
         }
         promise.then(response=>{
