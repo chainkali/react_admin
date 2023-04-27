@@ -40,58 +40,59 @@ export const reqLoginAdmin=(username,password)=>ajax('/sys/loginAdmin', {usernam
 export const reqLoginUser=(username,password)=>ajax('/sys/loginUser', {username,password}, 'POST')
 
 //查询所有manege
-export const reqManages = () => ajax(BASE + '/admin/getAdmin/1/1000000')
+export const reqManages = (page,pageSize) => ajax(BASE + `/admin/getAdmin/${page}/${pageSize}`)
 //添加或者更新manege
 export const reqAddOrUpdateManage = (manage) => ajax(BASE + '/admin/saveOrUpdateAdmin', manage, 'POST')
 //删除manege
 export const reqDeleteManage = (id) => ajax(BASE + '/admin/deleteAdmin', {id}, 'POST')
 //查询指定manege,name
-export const reqManage = (adminName) => ajax(BASE + '/admin/getAdmin/1/1000000',{adminName},'GET')
+export const reqManage = (adminName,page,pageSize) => ajax(BASE + `/admin/getAdmin/${page}/${pageSize}`,{adminName},'GET')
 
 
 //查询所有user
-export const reqUsers = () => ajax(BASE + '/user/getUser/1/1000000')
+export const reqUsers = (page,pageSize) => ajax(BASE + `/user/getUser/${page}/${pageSize}`)
 //添加或者更新user
 export const reqAddOrUpdateUser = (user) => ajax(BASE + '/user/saveOrUpdateUser', user, 'POST')
 //删除user
 export const reqDeleteUser = (id) => ajax(BASE + '/user/deleteUser', {id}, 'POST')
 //查询指定user,name
-export const reqUser = (userName) => ajax(BASE + '/user/getUser/1/1000000',{userName},'GET')
+export const reqUser = (userName,page,pageSize,) => ajax(BASE + `/user/getUser/${page}/${pageSize}`,{userName},'GET')
 
 //查询所有物资
-export const reqGoods = () => ajax(BASE + '/goods/getGoods/1/1000000')
+export const reqGoods = (page,pageSize) => ajax(BASE + `/goods/getGoods/${page}/${pageSize}`)
 //添加或者更新物资
 export const reqAddOrUpdateGood = (goods) => ajax(BASE + '/goods/saveOrUpdateGoods', goods, 'POST')
 //删除物资
 export const reqDeleteGood = (id) => ajax(BASE + '/goods/deleteGoods', {id}, 'POST')
 //查询指定物资
-export const reqGood = (goods) => ajax(BASE + '/goods/getGoods/1/1000000',{goods},'GET')
+export const reqGood = (goods,page,pageSize) => ajax(BASE + `/goods/getGoods/${page}/${pageSize}`,{goods},'GET')
 
 //查询所有被检测者
-export const reqNaRecords = () => ajax(BASE + '/na-record/getNaRecords/1/1000000')
+export const reqNaRecords = (page,pageSize) => ajax(BASE + `/na-record/getNaRecords/${page}/${pageSize}`)
 //添加或者更新被检测者
 export const reqAddOrUpdateNaRecord = (naRecord) => ajax(BASE + '/na-record/saveOrUpdateNaRecord', naRecord, 'POST')
 //删除被检测者
 export const reqDeleteNaRecord = (id) => ajax(BASE + '/na-record/deleteNaRecord', {id}, 'POST')
 //查询指定被检测者
-export const reqNaRecord = (userName,result,sex) => ajax(BASE + '/na-record/getNaRecords/1/1000000', {
+export const reqNaRecord = (userName,result,sex,idCard,page,pageSize) => ajax(BASE + `/na-record/getNaRecords/${page}/${pageSize}`, {
     userName,
     result,
-    sex
+    sex,
+    idCard
 },'GET')
 
 
 //查询所有检测点
-export const reqNaLocations = () => ajax(BASE + '/na-location/getLocation/1/1000000')
+export const reqNaLocations = (page,pageSize) => ajax(BASE + `/na-location/getLocation/${page}/${pageSize}`)
 //添加或者更新检测点
 export const reqAddOrUpdateNaLocation = (nalocation) => ajax(BASE + '/na-location/saveOrUpdateNaLocation', nalocation, 'POST')
 //删除检测点
 export const reqDeleteNaLocation = (id) => ajax(BASE + '/na-location/deleteNaLocation', {id}, 'POST')
 //查询指定检测点
-export const reqNaLocation = (location,status) => ajax(BASE + '/na-location/getLocation/1/1000000',{location,status},'GET')
+export const reqNaLocation = (location,status,page,pageSize) => ajax(BASE + `/na-location/getLocation/${page}/${pageSize}`,{location,status},'GET')
 
 //查询所有医护人员
-export const reqPersons = () => ajax(BASE + '/na-staff/getStaff/1/1000000')
+export const reqPersons = (page,pageSize) => ajax(BASE + `/na-staff/getStaff/${page}/${pageSize}`)
 //查询所有locations
 export const reqLocations = () => ajax(BASE + '/na-location/getLocation/1/100000')
 //添加或者更新医护人员
@@ -101,7 +102,7 @@ export const reqDeletePerson = (id) => ajax(BASE + '/na-staff/deleteNaStaff', {i
 //查询指定user,name
 // export const reqPerson = (staffName) => ajax(BASE + '/na-staff/getStaff/1/1000000',{staffName},'GET')
 //查询指定医护人员,nalocation
-export const reqPerson = (name,na_location) => ajax(BASE + '/na-staff/getStaff/1/1000000',{name,na_location},'GET')
+export const reqPerson = (name,na_location,page,pageSize) => ajax(BASE + `/na-staff/getStaff/${page}/${pageSize}`,{name,na_location},'GET')
 
 
 export const weather=()=>ajax('https://restapi.amap.com/v3/weather/weatherInfo?city=320205&key=bad7a0010b58161fde45a0ea26a0534e','GET')

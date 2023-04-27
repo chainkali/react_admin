@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Card, message} from 'antd'
 import ReactEcharts from 'echarts-for-react'
-import {reqLocations, reqNaRecord} from "../../api";
+import {reqNaRecord} from "../../api";
 
 /*
 后台管理的饼图路由组件
@@ -28,7 +28,7 @@ export default class Pie extends Component {
     const {positiveResult,searchName,searchSex} = this.state
     let result
     if (positiveResult) {
-      result = await reqNaRecord(searchName,positiveResult,searchSex)
+      result = await reqNaRecord(searchName,positiveResult,searchSex,null,1,999999)
       this.setState({loading: false}) // 隐藏loading
       // console.log("result:")
       // console.log(result)
@@ -50,7 +50,7 @@ export default class Pie extends Component {
     let result
     console.log("negativeResult"+negativeResult)
     if (negativeResult) {
-      result = await reqNaRecord(searchName,negativeResult,searchSex)
+      result = await reqNaRecord(searchName,negativeResult,searchSex,null,1,999999)
       this.setState({loading: false}) // 隐藏loading
       console.log("result:")
       console.log(result)
@@ -153,11 +153,11 @@ export default class Pie extends Component {
           radius : '55%',
           center: ['50%', '50%'],
           data:[
-            {value:335, name:'直接访问'},
-            {value:310, name:'邮件营销'},
-            {value:274, name:'联盟广告'},
-            {value:235, name:'视频广告'},
-            {value:400, name:'搜索引擎'}
+            // {value:335, name:'直接访问'},
+            // {value:310, name:'邮件营销'},
+            // {value:274, name:'联盟广告'},
+            // {value:235, name:'视频广告'},
+            // {value:400, name:'搜索引擎'}
           ].sort(function (a, b) { return a.value - b.value; }),
           roseType: 'radius',
           label: {

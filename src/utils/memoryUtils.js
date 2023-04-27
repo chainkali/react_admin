@@ -3,5 +3,6 @@
 * */
 
 export default {
-    user:{},//保持user
+    user:{},//保持userr
+    //isAdmin:false
 }

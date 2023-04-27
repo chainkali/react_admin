@@ -1,8 +1,7 @@
-import React, {Component, createContext} from 'react'
-import {Form, Icon, Input, Button, message, Checkbox, Table, Modal, Card} from 'antd'
+import React, {Component} from 'react'
+import {Form, Icon, Input, Button, message, Checkbox, Modal, Card} from 'antd'
 import './login.less'
-import logo from './images/logo.png'
-import {reqAddOrUpdateUser, reqLogin, reqLoginAdmin, reqLoginUser, reqUser} from '../../api'
+import {reqAddOrUpdateUser, reqLoginAdmin, reqLoginUser } from '../../api'
 import memoryUtils from "../../utils/memoryUtils";
 import storageUtils from "../../utils/storageUtils";
 import {Redirect} from "react-router-dom";
@@ -39,10 +38,8 @@ class Login extends Component {
                 console.log('请求成功', result)
                 if (result.code === 200) { // 登陆成功
                     // 提示登陆成功
-                    const {isAdmin}=this.state
                     const user = result.data;
                     memoryUtils.user=user
-                    memoryUtils.isAdmin=isadmn
                     storageUtils.saveUser(user)
                     // 跳转到管理界面 (不需要再回退回到登陆)
                     this.props.history.replace('/')
@@ -77,23 +74,22 @@ class Login extends Component {
         const user = this.form.getFieldsValue()
         this.form.resetFields()
         // 如果是更新, 需要给user指定id属性
-        if (this.user) {
-            user.id = this.user.id
-            if (user.username.trim().length === 0 || user.gender.trim().length === 0 || user.phone.trim().length === 0 || user.address.trim().length === 0) {
-                message.warning("请填写完整的数据信息")
-            } else {
-                // 2. 提交添加的请求
-                console.log("提交添加的请求")
-                const result = await reqAddOrUpdateUser(user)
-                // 3. 更新列表显示
-                if(result.code===200) {
-                    message.success(`${this.user ? '修改' : '添加'}用户成功`)
-                    this.setState({isShow: false})
-
-                    this.getUsers()
-                }
-            }
-        }else {
+        // if (this.user) {
+        //     user.id = this.user.id
+        //     if (user.username.trim().length === 0 || user.gender.trim().length === 0 || user.phone.trim().length === 0 || user.address.trim().length === 0) {
+        //         message.warning("请填写完整的数据信息")
+        //     } else {
+        //         // 2. 提交添加的请求
+        //         console.log("提交添加的请求")
+        //         const result = await reqAddOrUpdateUser(user)
+        //         // 3. 更新列表显示
+        //         if(result.code===200) {
+        //             message.success(`${this.user ? '修改' : '添加'}用户成功`)
+        //             this.setState({isShow: false})
+        //             this.getUsers()
+        //         }
+        //     }
+        // }else {
             if (user.password===undefined|| user.username === undefined || user.gender === undefined || user.phone=== undefined || user.address === undefined) {
                 message.warning("请填写完整的数据信息")
             } else {
@@ -102,14 +98,16 @@ class Login extends Component {
                 const result = await reqAddOrUpdateUser(user)
                 // 3. 更新列表显示
                 if(result.code===200) {
-                    message.success(`${this.user ? '修改' : '添加'}用户成功`)
+                    message.success(`注册用户成功`)
                     this.setState({isShow: false})
+                }if (result.code===201){
+                    message.warning("注册"+result.message+":"+result.data)
                 }
             }
-        }
+        // }
     }
     render() {
-        const {records, isShow,loading,searchName} = this.state
+        const {isShow} = this.state
         const user1 = this.user || {}
         //判断用户是否已经登录
         const user = memoryUtils.user;
@@ -124,7 +122,7 @@ class Login extends Component {
             <div className="login">
                     <header className="login-header">
                         <div className="login-header-imgh1">
-                            <img src={logo} alt='logo'/>
+                            {/*<img src={logo} alt='logo'/>*/}
                             <h1>核&ensp;酸&ensp;检&ensp;测&ensp;管&ensp;理&ensp;系&ensp;统</h1>
                         </div>
 
@@ -156,9 +154,10 @@ class Login extends Component {
                                             required: true, message: '请输入密码'
                                         },
                                         {
-                                            max: 10,
-                                            // pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/,
-                                            message: '密码必须由数字、字母两种字符组成，长度在6-12位之间',
+                                            // max: 20,
+                                            // pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/,
+                                            // pattern: /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[！!？@#￥%……&*，])[0-9a-zA-Z！!？@#￥%……&*,]{6,20}$/,
+                                            message: '密码必须由数字、字母两种字符组成，长度在6-20位之间,允许的字符串：！!？@#￥%……&*，',
                                         },
                                     ],
                                 })(
@@ -167,20 +166,17 @@ class Login extends Component {
                                 )}
                             </Item>
                             <Item>
-                                {/*{getFieldDecorator('isadmn', {*/}
-                                {/*    valuePropName: 'selected',*/}
-                                {/*    initialValue: true,*/}
-                                {/*})(<Checkbox className="login-form-checkbox" style={{marginLeft:'230px'}}>*/}
-                                {/*   管理员</Checkbox>*/}
-                                {/*)}*/}
                                 {getFieldDecorator('isadmn', {
                                     valuePropName: 'selected',
                                     initialValue: false,
                                 })(<Checkbox className="login-form-checkbox" style={{marginLeft:'45px'}}>
                                     管理员</Checkbox>
                                 )}
-                                <a className="login-form-forgot" onClick={this.showAdd}>没有账号？点我注册</a>
+                                <a className="login-form-forgot" onClick={this.showAdd} >没有账号？点我注册 </a>
+                                {/*<LinkButton onClick={this.showAdd}>没有账号？点我注册</LinkButton>*/}
 
+                            </Item>
+                            <Item>
                                 <Button type="primary" htmlType="submit" className="login-form-button">
                                     登录
                                 </Button>

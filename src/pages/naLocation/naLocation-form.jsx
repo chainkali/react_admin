@@ -1,12 +1,11 @@
 import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {
-  DatePicker,TimePicker,
+  TimePicker,
   Form,
   Input, Select
 } from 'antd'
 import moment from 'moment';
-import {count} from "echarts/lib/component/dataZoom/history";
 
 const format = 'HH:mm';
 const Item = Form.Item
@@ -30,7 +29,6 @@ class NaLocationForm extends PureComponent {
 
     const {naLocation} = this.props
     const { getFieldDecorator } = this.props.form
-    const { RangePicker } = DatePicker;
     // 指定Item布局的配置对象
     const formItemLayout = {
       labelCol: { span: 4 },  // 左侧label的宽度
@@ -44,10 +42,8 @@ class NaLocationForm extends PureComponent {
             getFieldDecorator('location', {
                 initialValue: naLocation.location,
                 rules: [
-
                     {whitespace: true,message:'不能仅为空格'},
                     {required: true, message: '请输入检测点'}
-
                 ],
             })(
               <Input placeholder='检测点'/>

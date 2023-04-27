@@ -20,14 +20,16 @@ class UserForm extends PureComponent {
   }
 
   componentWillMount () {
+      console.log(12345)
+      console.log(this.props)
     this.props.setForm(this.props.form)
   }
 
   render() {
-      console.log(this.props)
     const {user} = this.props
-      console.log("user:")
-      console.log(user)
+      console.log("user1:")
+      // console.log(user)
+      console.log(this.props)
     const { getFieldDecorator } = this.props.form
     // 指定Item布局的配置对象
     const formItemLayout = {
@@ -60,8 +62,8 @@ class UserForm extends PureComponent {
                         {
                             visibilityToggle:true,//小眼睛切换
                             // max: 12,
-                            pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/,
-                            message: '密码必须由数字、字母两种字符组成，长度在6-12位之间',
+                            pattern: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#￥%……&*（）])[A-Za-z\d!@#￥%……&*（）]{6,12}$/,
+                            message: '\'密码必须由数字，字母特，殊字符字符组成，特殊字符，长度在6-12位之间\',特殊符号：！!@#￥%……&*（）',
                         },
                     ],
                 })(
@@ -74,7 +76,7 @@ class UserForm extends PureComponent {
           <Item label='性别'>
               {
                   getFieldDecorator('gender', {
-                      initialValue: user.gender,
+                      initialValue: '男',
                   })(
                       <Select style={{ width: 120 }}>
                           <Option value="男">男</Option>
@@ -103,6 +105,24 @@ class UserForm extends PureComponent {
             )
           }
         </Item>
+          <Item label='身份证'>
+              {
+                  getFieldDecorator('idcard', {
+                      initialValue: user.idCard,
+                      rules: [
+                          {
+                              pattern: /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+                              message: '请输入正确的身份证信息',
+                          },
+                          {whitespace: true,message:'不能仅为空格'},
+                          {required: true, message: '请输入正确的身份证信息'}
+
+                      ],
+                  })(
+                      <Input placeholder='请输入身份证号码'/>
+                  )
+              }
+          </Item>
         <Item label='地址'>
           {
             getFieldDecorator('address', {

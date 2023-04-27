@@ -163,12 +163,13 @@ class LeftNav extends Component {
     //     this.getMenuNodes_map=this.getMenuNodes_map(menuList)
     // }
     UNSAFE_componentWillMount() {
-        console.log("memoryUtils.isAdmin"+memoryUtils.isAdmin)
-        if ( memoryUtils.isAdmin){
+        console.log("memoryUtils.user.isAdmin"+memoryUtils.user.isAdmin)
+        if ( memoryUtils.user.isAdmin){
             this.getMenuNodes_map=this.getMenuNodes_map(menuList)
         }else {
             this.getMenuNodes_map=this.getMenuNodes_map(menuListuser)
         }
+        console.log()
 
     }
     // style={{background:"rgba(2, 241, 96, 0.04)"}}

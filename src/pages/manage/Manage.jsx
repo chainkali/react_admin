@@ -29,6 +29,11 @@ export default class Manage extends Component {
         records: [], // 所有用户列表
         isShow: false, // 是否显示确认框
         searchName: '', // 搜索的关键字
+        page: 1,
+        pageSize: 5,
+        total:0,
+        currentPage:1,
+        isSearch:false
     }
 
   initColumns = () => {
@@ -99,7 +104,7 @@ export default class Manage extends Component {
                 const result = await reqDeleteManage(manage.id)
                 if(result.code===200) {
                     message.success('删除管理员成功!')
-                    this.getManages()
+                    this.getManages(1,5)
                 }
             }
         })
@@ -128,7 +133,7 @@ export default class Manage extends Component {
                 if (result.code === 200) {
                     message.success('修改成功')
                     this.setState({isShow: false})
-                    this.getManages()
+                    this.getManages(1,5)
                 }
             }
         }else {
@@ -142,44 +147,48 @@ export default class Manage extends Component {
                 if (result.code === 200) {
                     message.success('添加管理员成功')
                     this.setState({isShow: false})
-                    this.getManages()
+                    this.getManages(1,5)
                 }
             }
         }
 
     }
 
-    getManages = async () => {
+    getManages = async (page,pageSize) => {
         // 在发请求前, 显示loading
         this.setState({loading: true})
-        const result = await reqManages()
+        const result = await reqManages(page,pageSize)
         // 在请求完成后, 隐藏loading
         this.setState({loading: false})
         if (result.code===200) {
-            const {records} = result.data
+            const {records,total,current} = result.data
             this.setState({
-                records
+                records,total,currentPage:current,isSearch:false
             })
         }
     }
 
-    searchManage = async () => {
+    searchManage = async (page,pageSize) => {
         this.setState({loading: true}) // 显示loading
-
+        if (page===undefined||pageSize===undefined){
+            page=this.state.page
+            pageSize=this.state.pageSize
+        }
         const {searchName} = this.state
         // 如果搜索关键字有值, 说明我们要做搜索分页
         let result
         if (searchName) {
-            result = await reqManage(searchName)
+            result = await reqManage(searchName,page,pageSize)
             this.setState({loading: false}) // 隐藏loading
             if (result && result.code === 200) {
-                const {records} = result.data
+                const {records,total,current} = result.data
                 this.setState({
-                    records
+                    records,total,currentPage:current,isSearch:true
                 })
             }
         }else {
-            this.getManages()
+            this.getManages(1,5)
+            this.setState({isSearch:false}) // 显示loading
             message.warning("请输入查询名字")
         }
 
@@ -190,11 +199,11 @@ export default class Manage extends Component {
     }
 
     componentDidMount () {
-        this.getManages()
+        this.getManages(1,5)
     }
 
   render() {
-      const {records, isShow,loading,searchName} = this.state
+      const {records, isShow,loading,searchName,total,currentPage,isSearch} = this.state
       const manage = this.manage || {}
 
       const title = (
@@ -229,7 +238,17 @@ export default class Manage extends Component {
                   loading={loading}
                   dataSource={records}
                   columns={this.columns}
-                  pagination={{defaultPageSize: 5}}
+                  pagination={{defaultPageSize: 5,
+                      total:total,
+                      showTotal:(total) => `总共${total}条记录`,
+                      current:currentPage,
+                      onChange: (page, pageSize) => {
+                          if (!isSearch){
+                              this.getManages(page,pageSize)
+                          }else {
+                              this.searchManage(page,pageSize)
+                          }
+                      }}}
                   size="middle"
               />
 

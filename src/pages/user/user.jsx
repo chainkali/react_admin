@@ -1,4 +1,4 @@
-import React, {Component, memo} from 'react'
+import React, {Component} from 'react'
 import {
   Card,
   Button,
@@ -32,6 +32,11 @@ export default class User extends Component {
     records: [], // 所有用户列表
     isShow: false, // 是否显示确认框
     searchName: '', // 搜索的关键字
+    page: 1,
+    pageSize: 5,
+    total:0,
+    currentPage:1,
+    isSearch:false
   }
 
   initColumns = () => {
@@ -39,6 +44,11 @@ export default class User extends Component {
       {
         title: '用户名',
         dataIndex: 'username',
+        align: 'center'
+      },
+      {
+        title: '密码',
+        dataIndex: 'password',
         align: 'center'
       },
       {
@@ -104,14 +114,14 @@ export default class User extends Component {
   删除指定用户
    */
   deleteUser = (user) => {
-    if (memoryUtils.isAdmin) {
+    if (memoryUtils.user.isAdmin) {
       Modal.confirm({
         title: `确认删除${user.username}吗?`,
         onOk: async () => {
           const result = await reqDeleteUser(user.id)
           if (result.code === 200) {
             message.success('删除用户成功!')
-            this.getUsers()
+            this.getUsers(1,5)
           }
         }
       })
@@ -124,40 +134,46 @@ export default class User extends Component {
   添加/更新用户
    */
   addOrUpdateUser = async () => {
-    if (memoryUtils.isAdmin) {
+    if (memoryUtils.user.isAdmin) {
     // 1. 收集输入数据
     const user = this.form.getFieldsValue()
     this.form.resetFields()
-    // 如果是更新, 需要给user指定id属性
+      console.log("code2:")
+
+      // 如果是更新, 需要给user指定id属性
     if (this.user) {
       user.id = this.user.id
       if (user.username.trim().length === 0 || user.gender.trim().length === 0 || user.phone.trim().length === 0 || user.address.trim().length === 0) {
         message.warning("请填写完整的数据信息")
       } else {
         // 2. 提交添加的请求
-        console.log("提交添加的请求")
+        console.log("提交添加的请求1")
         const result = await reqAddOrUpdateUser(user)
         // 3. 更新列表显示
         if (result.code === 200) {
           message.success(`${this.user ? '修改' : '添加'}用户成功`)
           this.setState({isShow: false})
-
-          this.getUsers()
+          this.getUsers(1,5)
+        }else {
+          message.warning("操作"+result.message+","+result.data)
         }
+
       }
     } else {
       if (user.password === undefined || user.username === undefined || user.gender === undefined || user.phone === undefined || user.address === undefined) {
         message.warning("请填写完整的数据信息")
       } else {
         // 2. 提交添加的请求
-        console.log("提交添加的请求")
+        console.log("提交添加的请求2")
         const result = await reqAddOrUpdateUser(user)
         // 3. 更新列表显示
         if (result.code === 200) {
           message.success(`${this.user ? '修改' : '添加'}用户成功`)
           this.setState({isShow: false})
-
           this.getUsers()
+        }
+        if (result.code===201){
+          message.warning("注册"+result.message+":"+result.data)
         }
       }
     }
@@ -167,40 +183,43 @@ export default class User extends Component {
 
 }
 
-  getUsers = async () => {
+  getUsers = async (page,pageSize) => {
     // 在发请求前, 显示loading
     this.setState({loading: true})
-    const result = await reqUsers()
+    const result = await reqUsers(page,pageSize)
     // 在请求完成后, 隐藏loading
     this.setState({loading: false})
     if (result.code===200) {
-      const {records} = result.data
+      const {records,total,current} = result.data
       this.setState({
-        records
+        records,total,currentPage:current,isSearch:false
       })
     }
   }
 
-  searchUser = async () => {
+  searchUser = async (page,pageSize) => {
     this.setState({loading: true}) // 显示loading
-
+    if (page===undefined||pageSize===undefined){
+      page=this.state.page
+      pageSize=this.state.pageSize
+    }
     const {searchName} = this.state
     // 如果搜索关键字有值, 说明我们要做搜索分页
     let result
     if (searchName) {
-      result = await reqUser(searchName)
+      result = await reqUser(searchName,page,pageSize)
       this.setState({loading: false}) // 隐藏loading
       if (result && result.code === 200) {
-        const {records} = result.data
+        const {records,total,current} = result.data
         this.setState({
-          records
+          records,total,currentPage:current,isSearch:true
         })
       }
     }else {
-      this.getUsers()
+      this.getUsers(1,5)
+      this.setState({isSearch:false}) // 显示loading
       message.warning("请输入查询名字")
     }
-
   }
 
 
@@ -209,13 +228,13 @@ export default class User extends Component {
   }
 
   componentDidMount () {
-    this.getUsers()
+    this.getUsers(1,5)
   }
 
 
   render() {
 
-    const {records, isShow,loading,searchName} = this.state
+    const {records, isShow,loading,searchName,total,currentPage,isSearch} = this.state
     const user = this.user || {}
 
     const title = (
@@ -250,7 +269,17 @@ export default class User extends Component {
           loading={loading}
           dataSource={records}
           columns={this.columns}
-          pagination={{defaultPageSize: 5}}
+          pagination={{defaultPageSize: 5,
+            total:total,
+            showTotal:(total) => `总共${total}条记录`,
+            current:currentPage,
+            onChange: (page, pageSize) => {
+              if (!isSearch){
+                this.getUsers(page,pageSize)
+              }else {
+                this.searchUser(page,pageSize)
+              }
+            }}}
           size="middle"
         />
 

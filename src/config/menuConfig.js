@@ -7,7 +7,7 @@ const menuList=[
     },
     {
         title: '医护人员',
-        key: '/person',
+        key: '/nastaff',
         icon: 'user'
     },
     {
