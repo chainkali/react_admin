@@ -148,6 +148,8 @@ export default class Goods extends Component {
       message.success(`${flag ? '增加' : '减少'}物资`)
       if (!isSearch){
         this.getGoods(this.state.currentPage,5)
+      }else {
+        this.searchGood(this.state.currentPage,5)
       }
     }
   }
